@@ -900,28 +900,3 @@ try {
 }
 ```
 
-## Troubleshooting
-
-### "Unauthorized" Error
-
-- Verify agent ID and token are set correctly
-- Check environment variables in the container
-- Ensure the agent was started by Assegai (not manually)
-
-### "Chain not whitelisted"
-
-- Verify the chain is in the agent's manifest
-- Check the chain identifier format (must be CAIP-2)
-- Ensure RPC URL is configured
-
-### "Rate limit exceeded"
-
-- Reduce request frequency
-- Implement delays between requests
-- Use exponential backoff on retries
-
-### "API key not configured"
-
-- Configure the API key in Assegai Settings
-- Restart the agent after setting keys
-

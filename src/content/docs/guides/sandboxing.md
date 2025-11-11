@@ -1,5 +1,5 @@
 ---
-title: Docker Isolation
+title: Sandboxing
 ---
 Assegai runs each agent in an isolated Docker container with strict security controls. This sandboxing prevents agents from accessing the host system, other containers, or unauthorized network resources.
 
@@ -373,13 +373,7 @@ Docker isolation protects against:
 - **Compromised dependencies**: Limited blast radius if a package is exploited
 - **Accidental errors**: Cannot corrupt system files or other agents
 
-Docker does **not** protect against:
-
-- **Supply chain attacks**: Malicious code in the agent's directory is executed
-- **Logic bugs**: Agents can still waste API credits or request unwanted transactions
-- **Social engineering**: Agents can mislead users via logs or transaction descriptions
-
-### Known Limitations
+### Improvement areas:
 
 1. **Shared API keys**: All agents use the same keys, so a compromised agent can consume API quotas
 2. **Host network access**: Agents can reach any network endpoint accessible from the host (via proxy whitelisting)

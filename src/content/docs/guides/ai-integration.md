@@ -46,16 +46,6 @@ const decrypted = safeStorage.decryptString(encryptedBuffer);
 
 Keys are encrypted at rest and only decrypted in memory when an agent makes an API request.
 
-### Encrypted Storage Location
-
-Keys are stored in:
-
-- **Windows**: `%APPDATA%/assegai-sandbox-mvp/keys.enc`
-- **macOS**: `~/Library/Application Support/assegai-sandbox-mvp/keys.enc`
-- **Linux**: `~/.config/assegai-sandbox-mvp/keys.enc`
-
-This file is binary and cannot be read without the correct decryption keys (which are OS/user-specific).
-
 ## Using API Keys in Agents
 
 ### Declaring API Permissions
@@ -74,8 +64,6 @@ This is informational only and doesn't enforce restrictions. All agents with val
 
 ### Making API Calls
 
-Agents use the API proxy to make requests. The proxy automatically injects the configured API key.
-
 #### OpenAI Example
 
 ```javascript
@@ -91,7 +79,7 @@ const response = await fetch(
     body: JSON.stringify({
       model: 'gpt-4',
       messages: [
-        { role: 'user', content: 'Hello, Claude!' }
+        { role: 'user', content: 'Hello!' }
       ]
     })
   }
@@ -100,8 +88,6 @@ const response = await fetch(
 const data = await response.json();
 console.log(data.choices[0].message.content);
 ```
-
-The agent doesn't provide the OpenAI API key, it's instead injected by the proxy.
 
 #### Anthropic Example
 
@@ -116,7 +102,7 @@ const response = await fetch(
       'X-Assegai-Agent-Token': agentToken
     },
     body: JSON.stringify({
-      model: 'claude-3-opus-20240229',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 1024,
       messages: [
         { role: 'user', content: 'Explain quantum computing' }
@@ -131,29 +117,19 @@ console.log(data.content[0].text);
 
 ### API Endpoints
 
-The proxy exposes:
-
 - **OpenAI**: `http://host.docker.internal:8765/api/openai/*`
 - **Anthropic**: `http://host.docker.internal:8765/api/anthropic/*`
 
-All endpoints under these paths are proxied to the respective services with authentication.
-
-**Example paths:**
-
-- `/api/openai/v1/chat/completions`
-- `/api/openai/v1/embeddings`
-- `/api/anthropic/v1/messages`
-
-The API proxy strips the `/api/openai` or `/api/anthropic` prefix and forwards the request to the real API.
+The proxy strips the prefix and forwards to the real API with authentication.
 
 ## Rate Limiting
 
-API calls are rate-limited per agent to prevent abuse:
+Per-agent rate limits:
 
 - **OpenAI**: 100 requests per 60 seconds
 - **Anthropic**: 50 requests per 60 seconds
 
-Exceeding these limits returns a 429 error:
+Exceeding limits returns:
 
 ```json
 {
@@ -161,53 +137,75 @@ Exceeding these limits returns a 429 error:
 }
 ```
 
-Rate limits are enforced regardless of the API provider's own rate limits. Adjust your agent's request frequency accordingly.
-
 ## Cost Tracking
 
-Assegai tracks API usage and estimates costs based on token consumption:
+Token usage and costs are logged to the database using pricing data from [LiteLLM](https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json).
 
-### OpenAI Pricing (per 1k tokens)
+Cost estimates are approximate. Verify actual costs with your API provider.
 
-- **GPT-4**: $0.03 input, $0.06 output
-- **GPT-4 Turbo**: $0.01 input, $0.03 output
-- **GPT-3.5 Turbo**: $0.0005 input, $0.0015 output
+## Error Handling
 
-### Anthropic Pricing (per 1k tokens)
+### Key Not Configured
 
-- **Claude 3 Opus**: $0.015 input, $0.075 output
-- **Claude 3 Sonnet**: $0.003 input, $0.015 output
-- **Claude 3 Haiku**: $0.00025 input, $0.00125 output
-
-Usage is logged in the database:
-
-```sql
-CREATE TABLE api_usage (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  agent_id TEXT NOT NULL,
-  service TEXT NOT NULL,
-  endpoint TEXT NOT NULL,
-  tokens_used INTEGER,
-  cost_usd REAL,
-  timestamp INTEGER NOT NULL
-);
+```json
+{
+  "error": "OpenAI API key not configured in Assegai Settings."
+}
 ```
 
-**Note**: Cost estimates are approximate and may not reflect actual billing. Always verify costs with your API provider.
+**Solution**: Configure the key in Settings.
 
-### Viewing Usage
+### Invalid API Key
 
-API usage tracking is not currently exposed in the UI but can be queried directly:
-
-```sql
-SELECT 
-  agent_id,
-  service,
-  SUM(tokens_used) as total_tokens,
-  SUM(cost_usd) as total_cost
-FROM api_usage
-GROUP BY agent_id, service;
+```json
+{
+  "error": "Incorrect API key provided: sk-..."
+}
 ```
+
+**Solution**: Verify the key is correct.
+
+### Rate Limit Exceeded
+
+```json
+{
+  "error": "Rate limit exceeded"
+}
+```
+
+**Solution**: Implement backoff or reduce request frequency.
+
+## Security Considerations
+
+### Key Exposure
+
+API keys are never:
+
+- Logged
+- Returned in responses
+- Visible in UI after saving
+- Accessible to agents directly
+
+### Key Rotation
+
+To rotate a key:
+
+1. Generate new key from API provider
+2. Update in Assegai Settings
+3. Restart running agents
+
+## Local RPC Configuration
+
+Settings also allows configuring the local RPC endpoint:
+
+**Default**: `http://localhost:8545`
+
+To change:
+
+1. Navigate to **Settings** → **Local Development**
+2. Update **Local RPC Endpoint**
+3. Click **Save**
+4. Reconnect using local test account
 
 ## Error Handling
 
@@ -257,59 +255,6 @@ If the proxy cannot reach the API provider:
 
 **Solution**: Check internet connectivity and verify the API provider's status.
 
-## Security Considerations
-
-### Key Exposure
-
-API keys are never:
-
-- Logged to console or files
-- Returned in API responses
-- Visible in the UI after saving
-- Accessible to agents directly
-
-Agents receive API responses but never the keys themselves.
-
-### Key Rotation
-
-To rotate an API key:
-
-1. Generate a new key from your API provider
-2. Update the key in Assegai Settings
-3. Restart any running agents to use the new key
-
-Old keys can be revoked immediately from the API provider's dashboard.
-
-### Multi-Tenant Risks
-
-All agents share the same API keys. A compromised or malicious agent could:
-
-- Consume all rate limit quotas
-- Rack up API costs
-- Access the same API resources as other agents
-
-**Mitigation**: Only install agents from trusted sources, and monitor API usage regularly.
-
-### Local vs Production Keys
-
-Use separate API keys for development and production:
-
-- **Development**: Lower-tier keys with spending caps
-- **Production**: Full-access keys with monitoring enabled
-
-This limits the impact of development mistakes or security issues.
-
-## Removing API Keys
-
-To remove an API key:
-
-1. Delete the `keys.enc` file from the user data directory
-2. Restart Assegai
-
-Alternatively, save an empty string as the key value (though this leaves the key storage file in place).
-
-There's no UI for removing keys directly.
-
 ## Local RPC Configuration
 
 While not an "API key", the Settings view also allows configuring the local RPC endpoint for development:
@@ -325,44 +270,7 @@ This is used when connecting with the local test account. If your local testnet 
 3. Click **Save**
 4. Reconnect using the local test account
 
-This setting does **not** affect agents—they use RPC URLs from their manifests.
-
-## Troubleshooting
-
-### "Failed to encrypt keys"
-
-On Linux, ensure `libsecret` is installed:
-
-```bash
-# Ubuntu/Debian
-sudo apt-get install libsecret-1-dev
-
-# Fedora
-sudo dnf install libsecret-devel
-```
-
-Without it, Electron cannot encrypt keys, and they may be stored in plaintext (with a warning).
-
-### Keys Lost After OS Update
-
-If OS encryption keys change (e.g., after reinstalling the OS or changing users), the `keys.enc` file may become undecryptable.
-
-**Solution**: Re-enter the API keys in Settings.
-
-### API Costs Higher Than Expected
-
-- Review API usage in the database
-- Check for agent loops or excessive requests
-- Verify rate limiting is working correctly
-- Consider setting lower rate limits or using cheaper models
-
-### Cannot Save Key
-
-If the Save button doesn't work:
-
-- Ensure the key format is correct (starts with `sk-` for OpenAI, `sk-ant-` for Anthropic)
-- Check console for JavaScript errors
-- Verify the Settings IPC handler is registered
+This setting does **not** affect agents, as they use RPC URLs from their manifests.
 
 ## Best Practices
 

@@ -33,22 +33,9 @@ export default defineConfig({
 					],
 				},
 				{
-					label: 'Transactions',
-					items: [
-						{ label: 'Transaction Limits', slug: 'guides/transaction-limits' },
-						{ label: 'Approvals', slug: 'guides/transaction-approvals' },
-					],
-				},
-				{
 					label: 'Settings',
 					items: [
 						{ label: 'AI Integration', slug: 'guides/ai-integration' },
-					],
-				},
-				{
-					label: 'Security',
-					items: [
-						{ label: 'Docker Isolation', slug: 'guides/docker-isolation' },
 					],
 				},
 				{
@@ -56,12 +43,14 @@ export default defineConfig({
 					items: [
 						{ label: 'Building', slug: 'guides/building' },
 						{ label: 'Contributing', slug: 'guides/contributing' },
+						{ label: 'Roadmap', slug: 'guides/roadmap' },
 					],
 				},
 				{
 					label: 'Reference',
 					items: [
 						{ label: 'API Proxy Reference', slug: 'guides/api-proxy-reference' },
+						{ label: 'Sandboxing', slug: 'guides/sandboxing' },
 					],
 				},
 				{

@@ -412,11 +412,3 @@ anvil --host 0.0.0.0
 ### Transaction approval timeout
 
 Transaction requests timeout after 5 minutes. Approve or reject promptly to avoid timeouts.
-
-## Next Steps
-
-Now that you understand the example agent:
-
-- Explore [Transaction Limits](transaction-limits) to control spending
-- Read the [API Proxy Reference](api-proxy-reference) for complete SDK documentation
-- Learn about [Docker Isolation](docker-isolation) to understand the security model

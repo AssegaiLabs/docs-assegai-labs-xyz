@@ -70,12 +70,6 @@ On first launch, Assegai will:
 3. Start the API proxy server on port 8765
 4. Present the wallet connection screen
 
-The application stores data in platform-specific locations:
-
-- **Windows**: `%APPDATA%/assegai-sandbox-mvp`
-- **macOS**: `~/Library/Application Support/assegai-sandbox-mvp`
-- **Linux**: `~/.config/assegai-sandbox-mvp`
-
 ## Troubleshooting
 
 ### Docker Not Running
