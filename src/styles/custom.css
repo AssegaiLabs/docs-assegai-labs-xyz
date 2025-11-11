@@ -1,0 +1,48 @@
+:root {
+  --sl-color-accent-low: #8B5CF6;
+  --sl-color-accent: #8B5CF6;
+  --sl-color-accent-high: #A78BFA;
+  --sl-color-text-accent: #A78BFA;
+  
+  --sl-color-green-low: #10B981;
+  --sl-color-green: #10B981;
+  --sl-color-green-high: #6EE7B7;
+  
+  --sl-color-bg: #0F172A;
+  --sl-color-bg-nav: #1E293B;
+  --sl-color-bg-sidebar: #1E293B;
+  
+  --sl-color-gray-1: #F8FAFC;
+  --sl-color-gray-2: #E2E8F0;
+  --sl-color-gray-3: #CBD5E1;
+  --sl-color-gray-4: #94A3B8;
+  --sl-color-gray-5: #64748B;
+  --sl-color-gray-6: #475569;
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #7C3AED;
+  --sl-color-accent: #8B5CF6;
+  --sl-color-accent-high: #A78BFA;
+  
+  --sl-color-bg: #0F172A;
+  --sl-color-bg-nav: #1E293B;
+  --sl-color-bg-sidebar: #1E293B;
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--sl-color-white);
+}
+
+.sl-markdown-content a {
+  color: var(--sl-color-accent-high);
+}
+
+.sl-markdown-content a:hover {
+  color: var(--sl-color-accent);
+}
+
+.sl-markdown-content code {
+  background-color: rgba(9, 9, 9, 0.525);
+  border-color: rgba(139, 92, 246, 0.2);
+}
