@@ -5,6 +5,7 @@ import starlight from '@astrojs/starlight';
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+	site: 'https://docs.assegailabs.xyz',
 		starlight({
 			title: 'Assegai AI Sandbox',
 			description: 'Documentation for the Assegai AI Sandbox - Safe AI agent execution for blockchain',
