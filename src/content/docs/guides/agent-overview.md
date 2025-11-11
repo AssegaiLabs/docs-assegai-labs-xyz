@@ -73,31 +73,31 @@ my-agent/
 
 ### Installation
 
-1. Reads and validates manifest
-2. Builds Docker image
-3. Registers in database
-4. Configures spending limits and RPC whitelist
+-  Reads and validates manifest
+-  Builds Docker image
+-  Registers in database
+-  Configures spending limits and RPC whitelist
 
 ### Starting
 
-1. Creates container with resource limits
-2. Generates authentication token
-3. Injects environment variables
-4. Starts container
-5. Status becomes "running"
+- Creates container with resource limits
+-  Generates authentication token
+-  Injects environment variables
+-  Starts container
+-  Status becomes "running"
 
 ### Stopping
 
-1. Sends `SIGTERM` to container
-2. 10 second grace period
-3. Forcibly stops and removes container
-4. Status becomes "stopped"
+-  Sends `SIGTERM` to container
+-  10 second grace period
+-  Forcibly stops and removes container
+-  Status becomes "stopped"
 
 ### Deletion
 
-1. Stops agent if running
-2. Removes Docker image
-3. Deletes database records
+-  Stops agent if running
+-  Removes Docker image
+-  Deletes database records
 
 ## Docker Configuration
 
@@ -223,29 +223,3 @@ Token allowances are chain-specific and token-specific. An agent might have:
 - 1000 USDC allowance on Ethereum (chain 1)
 - 500 USDC allowance on Polygon (chain 137)
 - 10 ETH allowance on Base (chain 8453)
-
-
-## Best Practices
-
-### Design
-
-- Handle `SIGTERM` and `SIGINT` gracefully
-- Log important events
-- Handle transaction rejections
-- Persist state to `/agent-workspace`
-- Keep logic simple
-
-### Security
-
-- Never hardcode credentials
-- Use provided environment variables
-- Validate external data
-- Implement retry logic with backoff
-
-### Testing
-
-- Test with local test account
-- Use Anvil/Hardhat for deterministic state
-- Verify spending limits work
-- Check logs frequently
-

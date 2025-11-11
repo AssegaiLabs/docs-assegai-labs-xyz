@@ -146,6 +146,25 @@ Policy-based transaction approval for teams.
 - Trezor support
 - Secure enclave utilization
 
+## Best Practices
+
+### Design
+- Handle `SIGTERM` and `SIGINT` gracefully
+- Log important events
+- Handle transaction rejections
+- Persist state to `/agent-workspace`
+- Keep logic simple
+- Never hardcode credentials
+- Use provided environment variables
+- Validate external data
+- Implement retry logic with backoff
+
+### Testing
+- Test with local test account
+- Use Anvil/Hardhat for deterministic state
+- Verify spending limits work
+- Check logs frequently
+
 ---
 
 ## Contributing to the Roadmap
