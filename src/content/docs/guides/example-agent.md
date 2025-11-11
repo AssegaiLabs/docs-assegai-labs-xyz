@@ -333,12 +333,12 @@ Assegai will build the Docker image and register the agent.
 Click **"Logs"** on the agent card to view real-time output:
 
 ```
-[2024-11-10T15:23:10.123Z] [INFO] 🚀 MVP Showcase Agent starting...
-[2024-11-10T15:23:10.234Z] [INFO] ✅ Wallet address found: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-[2024-11-10T15:23:10.345Z] [INFO] 💰 Current balance: 10000.0000 ETH
-[2024-11-10T15:23:15.456Z] [INFO] 💸 Requesting demo transaction: 0.0001 ETH to 0xd8dA...2913
-[2024-11-10T15:23:15.567Z] [INFO] 👉 Please approve the transaction in the Assegai UI.
-[2024-11-10T15:23:20.678Z] [SUCCESS] ✅ Transaction sent! Hash: 0xabc123...
+[2025-11-10T15:23:10.123Z] [INFO] 🚀 MVP Showcase Agent starting...
+[2025-11-10T15:23:10.234Z] [INFO] ✅ Wallet address found: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+[2025-11-10T15:23:10.345Z] [INFO] 💰 Current balance: 10000.0000 ETH
+[2025-11-10T15:23:15.456Z] [INFO] 💸 Requesting demo transaction: 0.0001 ETH to 0xd8dA...2913
+[2025-11-10T15:23:15.567Z] [INFO] 👉 Please approve the transaction in the Assegai UI.
+[2025-11-10T15:23:20.678Z] [SUCCESS] ✅ Transaction sent! Hash: 0xabc123...
 ```
 
 ## Customizing the Example

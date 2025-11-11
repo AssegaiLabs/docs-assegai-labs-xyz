@@ -464,7 +464,7 @@ const response = await fetch('http://host.docker.internal:8765/api/anthropic/v1/
     'X-Assegai-Agent-Token': agentToken
   },
   body: JSON.stringify({
-    model: 'claude-3-opus-20240229',
+    model: 'claude-opus-4-1-20250805',
     max_tokens: 1024,
     messages: [
       { role: 'user', content: 'Write a haiku about AI agents.' }
