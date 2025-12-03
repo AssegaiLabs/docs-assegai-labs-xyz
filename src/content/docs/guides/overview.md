@@ -3,6 +3,10 @@ title: Overview
 description: Overview of the Assegai AI Sandbox
 ---
 
+:::caution[Work in Progress]
+This project is currently in active development and pending open-source release. Documentation, APIs, and features are subject to change without notice.
+:::
+
 ## What is Assegai AI Sandbox?
 
 The Assegai AI Sandbox is an Electron-based desktop application (cross-platform: macOS, Windows, Linux) that allows users to run AI agents in Docker containers for on-chain blockchain activity.

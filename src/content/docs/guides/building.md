@@ -36,8 +36,8 @@ sudo dnf install gcc-c++ libsecret-devel
 ## Cloning the Repository
 
 ```bash
-git clone https://github.com/your-org/assegai-sandbox.git
-cd assegai-sandbox
+git clone https://github.com/AssegaiLabs/Assegai-Agent-Sandbox.git
+cd Assegai-Agent-Sandbox
 ```
 
 ## Installing Dependencies
@@ -50,6 +50,9 @@ npm install -g pnpm
 
 # Install project dependencies
 pnpm install
+
+# Build and run the app
+pnpm start 
 ```
 
 This will install:

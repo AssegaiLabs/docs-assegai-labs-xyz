@@ -30,29 +30,22 @@ If this command succeeds, Docker is properly configured.
 
 ### Pre-built Binaries
 
-Download the latest release for your platform from the releases page:
-
-- **Windows**: `Assegai-Setup-{version}.exe`
-- **macOS**: `Assegai-{version}.dmg`
-- **Linux**: `Assegai-{version}.AppImage`
-
-Launch the installer and follow the on-screen instructions.
+Coming soon. For now:
 
 ### Building from Source
 
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-org/assegai-sandbox.git
-cd assegai-sandbox
+git clone https://github.com/AssegaiLabs/Assegai-Agent-Sandbox.git
+cd Assegai-Agent-Sandbox
 pnpm install
 ```
 
 Build and run:
 
 ```bash
-pnpm run build
-pnpm run start
+pnpm start
 ```
 
 For development with hot reload:
