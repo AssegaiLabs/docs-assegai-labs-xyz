@@ -24,5 +24,4 @@ my-agent/
 ├── assegai.json       # Manifest configuration
 ├── index.js           # Main entry point
 ├── Dockerfile         # (Optional) Custom build steps
-├── package.json       # Node.js dependencies
-└── sdk.js             # Local SDK helper file
+└── package.json       # Node.js dependencies
