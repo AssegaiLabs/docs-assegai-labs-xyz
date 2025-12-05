@@ -7,8 +7,8 @@ export default defineConfig({
 	site: 'https://docs.assegailabs.xyz',
 	integrations: [
 		starlight({
-			title: 'Assegai AI Sandbox',
-			description: 'Documentation for the Assegai AI Sandbox - Safe AI agent execution for blockchain',
+			title: 'Assegai Agent Sandbox',
+			description: 'Documentation for the Assegai AI Agent Sandbox',
 			logo: {
 				src: './src/assets/logo.svg',
 				replacesTitle: false,
@@ -23,35 +23,27 @@ export default defineConfig({
 					items: [
 						{ label: 'Overview', slug: 'guides/overview' },
 						{ label: 'Installation', slug: 'guides/installation' },
-						{ label: 'Wallet Authentication', slug: 'guides/wallet-auth' },
 					],
 				},
 				{
-					label: 'Agents',
+					label: 'Core Concepts',
 					items: [
-						{ label: 'Agents Overview', slug: 'guides/agent-overview' },
-						{ label: 'Example Agent', slug: 'guides/example-agent' },
-					],
-				},
-				{
-					label: 'Settings',
-					items: [
+						{ label: 'Agent Overview', slug: 'guides/agent-overview' },
 						{ label: 'AI Integration', slug: 'guides/ai-integration' },
-					],
-				},
-				{
-					label: 'Development',
-					items: [
-						{ label: 'Building', slug: 'guides/building' },
-						{ label: 'Contributing', slug: 'guides/contributing' },
-						{ label: 'Roadmap', slug: 'guides/roadmap' },
-					],
-				},
-				{
-					label: 'Reference',
-					items: [
-						{ label: 'API Proxy Reference', slug: 'guides/api-proxy-reference' },
 						{ label: 'Sandboxing', slug: 'guides/sandboxing' },
+					],
+				},
+				{
+					label: 'Developers',
+					items: [
+						{ label: 'Building Agents', slug: 'guides/building-agents' },
+						{ label: 'SDK Reference', slug: 'guides/sdk-reference' },
+					],
+				},
+				{
+					label: 'Project',
+					items: [
+						{ label: 'Roadmap', slug: 'guides/roadmap' },
 					],
 				},
 				{

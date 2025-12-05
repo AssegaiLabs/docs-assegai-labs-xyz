@@ -1,27 +1,40 @@
 ---
-title: Overview
-description: Overview of the Assegai AI Sandbox
+title: Assegai Agent Sandbox
+description: Documentation for the Assegai AI Agent Sandbox
+template: splash
+hero:
+  tagline: A secure launchpad for on-chain AI agents.
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Get Started
+      link: /guides/overview/
+      icon: right-arrow
+      variant: primary
+    - text: SDK Reference
+      link: /guides/sdk-reference/
+      icon: external
 ---
 
-## About
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-The Assegai AI Sandbox runs AI agents in Docker containers with spending controls and transaction approval for blockchain operations.
+:::note[Private Preview]
+The Assegai Agent Sandbox is currently in **MVP**. The codebase is currently private but is scheduled for public release soon. These docs are intended for early access users and contributors.
+:::
 
-### Features
+## Key Features
 
-- **Docker Isolation**: Agents run in containers with resource limits
-- **Transaction Approval**: All transactions require explicit user approval
-- **Spending Controls**: Per-transaction, daily, weekly, and monthly limits
-- **Token Allowances**: Configure allowances per token per chain
-- **AI API Access**: Proxied OpenAI and Anthropic API access with cost tracking
-- **Wallet Support**: WalletConnect and local development wallet modes
-
-### Current Status
-
-MVP in development. Core features are functional for early testing and co-development.
-
-## Contact
-
-- **Email**: dev@assegailabs.xyz
-- **GitHub**: [github.com/assegailabs](https://github.com/assegailabs)
-- **Website**: [assegailabs.xyz](https://assegailabs.xyz)
+<CardGrid stagger>
+	<Card title="Secure Isolation" icon="lock">
+		Agents execute within isolated Docker containers with strict resource limits and read-only filesystems.
+	</Card>
+	<Card title="Human-in-the-Loop" icon="approve-check">
+		Every on-chain transaction requires explicit user approval via a secure UI overlay.
+	</Card>
+	<Card title="Wallet Connect" icon="puzzle">
+		Connect any mobile or browser wallet via WalletConnect, or use local Anvil nodes for testing.
+	</Card>
+	<Card title="AI Proxy" icon="rocket">
+		Built-in proxies for OpenAI and Anthropic APIs allow agents to use LLMs without exposing your API keys to the agent code.
+	</Card>
+</CardGrid>

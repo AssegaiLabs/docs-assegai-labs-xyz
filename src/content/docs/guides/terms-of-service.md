@@ -48,10 +48,3 @@ The application may interact with third-party services. You are responsible for 
 ## Modifications
 
 We may modify these Terms at any time. Continued use constitutes acceptance of changes.
-
-## Contact
-
-For questions about this Privacy Policy:
-
-- Open an issue on [GitHub](https://github.com/your-org/assegai-sandbox/issues)
-- Email: dev@assegailabs.xyz

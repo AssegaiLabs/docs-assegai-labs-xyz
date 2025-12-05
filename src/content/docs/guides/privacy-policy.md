@@ -27,8 +27,3 @@ You are responsible for:
 ## Changes
 
 We may update this policy from time to time. Continued use of the application constitutes acceptance of any changes.
-
-## Contact
-
-- Open an issue on [GitHub](https://github.com/your-org/assegai-sandbox/issues)
-- Email: dev@assegailabs.xyz
