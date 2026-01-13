@@ -12,29 +12,96 @@ Traditionally, developers hardcode API keys into their scripts. This is dangerou
 Assegai includes a **Local API Proxy** running on the host machine.
 
 1.  **Configuration:** You enter your OpenAI or Anthropic API keys in the Assegai App **Settings** menu. These are stored encrypted on your device.
-2.  **Agent Request:** The agent uses the `@assegailabs/sdk` to call `callOpenAI` or `callAnthropic`.
+2.  **Agent Request:** The agent uses the `@assegailabs/sdk` to call `callClaude()` or `callOpenAI()`.
 3.  **Injection:** The request is sent to the Assegai Host. The Host verifies the agent has permission to use that API, injects the real API key, and forwards the request to the provider.
 4.  **Response:** The response is stripped of sensitive headers and returned to the agent.
 
 ### Supported Providers
 
-* **OpenAI**: GPT-5, GPT-5-Turbo
-* **Anthropic**: Claude 4.5 Sonnet, Claude 4.5 Opus
+**Anthropic Claude:**
+- Claude Opus 4.5
+- Claude Sonnet 4.5
+- Claude Haiku 4.5
+- Claude 3.5 Sonnet
+- Claude 3.5 Haiku
 
-### Usage Example
+**OpenAI:**
+- GPT-5.2, GPT-5.1, GPT-5
+- GPT-4.1, GPT-4.1 mini
+- GPT-4o, GPT-4o mini
+- o3, o4-mini (reasoning models)
+
+### Usage Examples
+
+#### Calling Claude
 
 ```javascript
-import AssegaiSDK from '@assegailabs/sdk';
-const assegai = new AssegaiSDK();
+import { AssegaiSDK } from '@assegailabs/sdk';
 
-// The agent does NOT need an API key in its environment variables
-const result = await assegai.callOpenAI('/v1/chat/completions', {
-    model: "gpt-5",
-    messages: [
-        { role: "system", content: "You are a DeFi assistant." },
-        { role: "user", content: "Analyze this token swap path..." }
-    ]
+const sdk = new AssegaiSDK();
+
+const response = await sdk.callClaude({
+  model: 'claude-sonnet-4-5-20250929',
+  messages: [
+    { role: 'user', content: 'Analyze this token swap path...' }
+  ],
+  system: 'You are a DeFi assistant.',
+  max_tokens: 4096,
 });
+
+// Extract text from response
+const text = response.content
+  .filter(block => block.type === 'text')
+  .map(block => block.text)
+  .join('');
+```
+
+#### Calling OpenAI
+
+```javascript
+const response = await sdk.callOpenAI({
+  model: 'gpt-4o',
+  messages: [
+    { role: 'system', content: 'You are a DeFi assistant.' },
+    { role: 'user', content: 'Analyze this token swap path...' }
+  ],
+  max_tokens: 1024,
+});
+
+const text = response.choices[0].message.content;
+```
+
+## Tool Use with Claude
+
+The SDK supports Claude's tool use capabilities for building agentic workflows:
+
+```javascript
+const response = await sdk.callClaude({
+  model: 'claude-sonnet-4-5-20250929',
+  messages: [{ role: 'user', content: 'Check the ETH balance of vitalik.eth' }],
+  max_tokens: 1024,
+  tools: [
+    {
+      name: 'get_balance',
+      description: 'Get the ETH balance of a wallet address',
+      input_schema: {
+        type: 'object',
+        properties: {
+          address: { type: 'string', description: 'Ethereum address' }
+        },
+        required: ['address']
+      }
+    }
+  ],
+});
+
+// Check if Claude wants to use a tool
+const toolUse = response.content.find(block => block.type === 'tool_use');
+if (toolUse) {
+  // Execute the tool and continue the conversation
+  const balance = await sdk.getBalance('eip155:1', toolUse.input.address);
+  // ... feed result back to Claude
+}
 ```
 
 ## Flexible Integration
@@ -49,7 +116,7 @@ Since Assegai agents run in Docker, they can communicate with services running o
 
 ```javascript
 // Example: Calling a local Llama 3 model via Ollama
-const response = await fetch('[http://host.docker.internal:11434/api/generate](http://host.docker.internal:11434/api/generate)', {
+const response = await fetch('http://host.docker.internal:11434/api/generate', {
   method: 'POST',
   body: JSON.stringify({
     model: "llama3",
@@ -75,6 +142,9 @@ In this pattern, your agent container runs an instance of the `@modelcontextprot
 ```javascript
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { AssegaiSDK } from '@assegailabs/sdk';
+
+const sdk = new AssegaiSDK();
 
 // 1. Setup the MCP Client
 const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
@@ -85,12 +155,14 @@ await mcpClient.connect(clientTransport);
 const tools = await mcpClient.listTools();
 
 // 3. Orchestrate with Claude via Assegai SDK
-const response = await assegai.callClaude('claude-4-5-sonnet', history, {
-    tools: tools.map(t => ({ 
-        name: t.name, 
-        description: t.description, 
-        input_schema: t.inputSchema 
-    }))
+const response = await sdk.callClaude({
+  model: 'claude-sonnet-4-5-20250929',
+  messages: history,
+  tools: tools.map(t => ({ 
+    name: t.name, 
+    description: t.description, 
+    input_schema: t.inputSchema 
+  }))
 });
 ```
 

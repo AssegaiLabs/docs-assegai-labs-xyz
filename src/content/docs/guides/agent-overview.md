@@ -25,3 +25,18 @@ my-agent/
 ├── index.js           # Main entry point
 ├── Dockerfile         # (Optional) Custom build steps
 └── package.json       # Node.js dependencies
+```
+
+## Chain Identifiers
+
+Assegai uses [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md) chain identifiers for cross-chain compatibility:
+
+| Chain | CAIP-2 Identifier |
+| :--- | :--- |
+| Ethereum Mainnet | `eip155:1` |
+| Polygon | `eip155:137` |
+| Base | `eip155:8453` |
+| Optimism | `eip155:10` |
+| Arbitrum One | `eip155:42161` |
+| Sepolia (Testnet) | `eip155:11155111` |
+| Anvil (Local) | `eip155:31337` |

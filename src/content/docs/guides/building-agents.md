@@ -28,12 +28,12 @@ This file defines your agent's identity, permissions, and resource requirements.
   "runtime": "node",
   "entrypoint": "index.js",
   "permissions": {
-    "chains": ["ethereum", "base"],
+    "chains": ["eip155:1", "eip155:8453"],
     "rpcs": {
-      "ethereum": "[https://eth.llamarpc.com](https://eth.llamarpc.com)",
-      "base": "[https://mainnet.base.org](https://mainnet.base.org)"
+      "eip155:1": "https://eth.llamarpc.com",
+      "eip155:8453": "https://mainnet.base.org"
     },
-    "apis": ["openai"],
+    "apis": ["openai", "anthropic"],
     "contracts": ["0x..."]
   },
   "resources": {
@@ -54,7 +54,7 @@ This file defines your agent's identity, permissions, and resource requirements.
 | Field | Description |
 | :--- | :--- |
 | `runtime` | Currently supports `node`. |
-| `permissions.chains` | Array of chain slugs the agent is allowed to access. |
+| `permissions.chains` | Array of CAIP-2 chain identifiers the agent can access (e.g., `eip155:1` for Ethereum). |
 | `permissions.apis` | Array of AI services required (e.g., `["openai", "anthropic"]`). |
 | `spending_limits` | Limits defined in the native currency (e.g., ETH). |
 
@@ -63,33 +63,31 @@ This file defines your agent's identity, permissions, and resource requirements.
 Your agent must import the SDK to perform sensitive actions.
 
 ```javascript
-import { AssegaiSDK } from './sdk.js';
+import { AssegaiSDK } from '@assegailabs/sdk';
 
-const assegai = new AssegaiSDK();
+const sdk = new AssegaiSDK();
 
 async function start() {
-  await assegai.log('info', 'Agent initializing...');
+  await sdk.info('Agent initializing...');
 
   // 1. Get the user's connected wallet address
-  const address = await assegai.getWalletAddress('ethereum');
+  const address = await sdk.getWalletAddress('eip155:1');
   
   // 2. Read data (No approval needed)
-  const balance = await assegai.queryChain('ethereum', 'eth_getBalance', [
-    address,
-    'latest'
-  ]);
+  const balance = await sdk.getBalance('eip155:1', address);
+  await sdk.info(`Balance: ${BigInt(balance)} wei`);
   
   // 3. Execute Action (Triggers User Approval Popup)
   try {
-    const txHash = await assegai.requestTransaction({
-      chain: 'ethereum',
+    const txHash = await sdk.requestTransaction({
+      chain: 'eip155:1',
       to: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
       value: '1000000000000000', // Wei
       data: '0x'
     });
-    await assegai.log('success', `Transaction mined: ${txHash}`);
+    await sdk.success(`Transaction mined: ${txHash}`);
   } catch (error) {
-    await assegai.log('error', 'User rejected the transaction');
+    await sdk.error('Transaction failed or was rejected');
   }
 }
 
